@@ -14,18 +14,12 @@ services:
       - ./backend/.env
 
     environment:
-      # If Ollama runs directly on the host machine:
       OLLAMA_HOST: http://host.docker.internal:11434
 
     volumes:
-      # Keep uploaded documents outside the image
       - ./backend/uploads:/app/uploads
-
-      # Keep generated vector-store data outside the container
-      - ./backend/vector_store:/app/vector_store
-
-      # Keep application data/database outside the container
       - ./backend/data:/app/data
+      - ./backend/vector_store:/app/vector_store
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
