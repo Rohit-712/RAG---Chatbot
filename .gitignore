@@ -1,0 +1,66 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+
+venv/
+.venv/
+env/
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+backend/.env
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+backend/data/
+
+# =========================
+# Uploaded Documents
+# =========================
+backend/uploads/
+uploads/
+
+# =========================
+# FAISS / Vector Store
+# =========================
+backend/vector_store/
+vector_store/
+*.faiss
+*.index
+*.pkl
+
+# =========================
+# Node
+# =========================
+node_modules/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs / Cache
+# =========================
+*.log
+.pytest_cache/
+.coverage
+htmlcov/

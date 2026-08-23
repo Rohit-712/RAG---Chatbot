@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RAG Chatbot</title>
+
+    <!-- CSS -->
+    <link
+        rel="stylesheet"
+        href="./style.css?v=11"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="app">
+
+
+        <!-- =========================================================
+             AUTH SCREEN
+        ========================================================== -->
+
+        <section
+            id="auth-screen"
+            class="screen active"
+        >
+
+            <div class="auth-card">
+
+
+                <!-- BRAND -->
+
+                <div class="brand">
+
+                    <div class="brand-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <h1>
+                            RAG Chatbot
+                        </h1>
+
+                        <p class="subtitle">
+                            Chat with your documents using AI
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AUTH TABS -->
+
+                <div class="tabs">
+
+                    <button
+                        type="button"
+                        class="tab-btn active"
+                        data-tab="login"
+                    >
+                        Login
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="tab-btn"
+                        data-tab="register"
+                    >
+                        Register
+                    </button>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <form
+                    id="login-form"
+                    class="auth-form active"
+                >
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        placeholder="Email"
+                        autocomplete="email"
+                        required
+                    >
+
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="Password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <button
+                        type="submit"
+                    >
+                        Login
+                    </button>
+
+                </form>
+
+
+                <!-- REGISTER -->
+
+                <form
+                    id="register-form"
+                    class="auth-form"
+                >
+
+                    <input
+                        type="text"
+                        id="register-name"
+                        placeholder="Full name"
+                        autocomplete="name"
+                    >
+
+
+                    <input
+                        type="email"
+                        id="register-email"
+                        placeholder="Email"
+                        autocomplete="email"
+                        required
+                    >
+
+
+                    <input
+                        type="password"
+                        id="register-password"
+                        placeholder="Password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+
+
+                    <button
+                        type="submit"
+                    >
+                        Create account
+                    </button>
+
+                </form>
+
+
+                <!-- AUTH ERROR -->
+
+                <p
+                    id="auth-error"
+                    class="error"
+                    role="alert"
+                ></p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+             CHAT SCREEN
+        ========================================================== -->
+
+        <section
+            id="chat-screen"
+            class="screen"
+        >
+
+
+            <!-- =====================================================
+                 SIDEBAR
+            ====================================================== -->
+
+            <aside class="sidebar">
+
+
+                <div class="sidebar-top">
+
+
+                    <!-- SIDEBAR BRAND -->
+
+                    <div class="sidebar-brand">
+
+                        <div class="sidebar-logo">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Knowledge Base
+                            </h2>
+
+                            <span>
+                                RAG Workspace
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- UPLOAD -->
+
+                    <label
+                        class="upload-btn"
+                        for="file-input"
+                    >
+
+                        <span>
+                            ＋
+                        </span>
+
+                        Upload document
+
+
+                        <input
+                            type="file"
+                            id="file-input"
+                            accept=".pdf,.txt,.md"
+                            hidden
+                        >
+
+                    </label>
+
+
+
+                    <!-- UPLOAD STATUS -->
+
+                    <div
+                        id="upload-status"
+                        class="upload-status"
+                        aria-live="polite"
+                    ></div>
+
+
+
+                    <!-- =================================================
+                         DOCUMENT HEADER
+                    ================================================== -->
+
+                    <div class="documents-header">
+
+                        <h2>
+                            Your documents
+                        </h2>
+
+
+                        <!-- IMPORTANT:
+                             Dynamic document count -->
+                        <span
+                            id="document-count"
+                        >
+                            0
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DOCUMENT LIST
+                    ================================================== -->
+
+                    <ul
+                        id="doc-list"
+                        aria-label="Uploaded documents"
+                    ></ul>
+
+
+                </div>
+
+
+
+                <!-- =====================================================
+                     SIDEBAR FOOTER
+                ====================================================== -->
+
+                <div class="sidebar-footer">
+
+
+                    <!-- NEW CHAT -->
+
+                    <button
+                        id="new-chat-btn"
+                        class="new-chat-btn"
+                        type="button"
+                    >
+
+                        ＋ New chat
+
+                    </button>
+
+
+
+                    <!-- LOGOUT -->
+
+                    <button
+                        id="logout-btn"
+                        class="logout-btn"
+                        type="button"
+                    >
+
+                        ↪ Log out
+
+                    </button>
+
+
+                </div>
+
+
+            </aside>
+
+
+
+            <!-- =====================================================
+                 MAIN CHAT
+            ====================================================== -->
+
+            <main class="chat-main">
+
+
+                <!-- =================================================
+                     HEADER
+                ================================================== -->
+
+                <header class="chat-header">
+
+
+                    <div>
+
+                        <h2>
+                            Ask your documents
+                        </h2>
+
+                    </div>
+
+
+                    <div class="header-status">
+
+                        <span
+                            class="status-dot"
+                        ></span>
+
+                        AI document assistant
+
+                    </div>
+
+
+                </header>
+
+
+
+                <!-- =================================================
+                     MESSAGES
+                ================================================== -->
+
+                <div
+                    id="messages"
+                    class="messages"
+                >
+
+
+                    <!-- WELCOME -->
+
+                    <div class="welcome-card">
+
+                        <div class="welcome-icon">
+                            ✦
+                        </div>
+
+
+                        <h3>
+                            Ask anything about your documents
+                        </h3>
+
+
+                        <p>
+                            Upload a PDF, TXT or Markdown
+                            file and start asking questions.
+                        </p>
+
+
+                        <!-- OPTIONAL SUGGESTIONS -->
+
+                        <div class="suggestion-list">
+
+
+                            <button
+                                type="button"
+                                class="suggestion"
+                            >
+                                Summarize this document
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="suggestion"
+                            >
+                                What are the main topics?
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="suggestion"
+                            >
+                                Explain this document
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CHAT INPUT
+                ================================================== -->
+
+                <form
+                    id="chat-form"
+                    class="chat-input-bar"
+                >
+
+
+                    <div class="input-wrapper">
+
+
+                        <span
+                            class="input-icon"
+                        >
+                            ✦
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="chat-input"
+                            placeholder="Ask a question about your uploaded documents..."
+                            autocomplete="off"
+                            required
+                        >
+
+
+                    </div>
+
+
+
+                    <button
+                        type="submit"
+                        class="send-btn"
+                    >
+
+                        <span>
+                            Send
+                        </span>
+
+                        <span>
+                            ➜
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+
+
+                <!-- =================================================
+                     INPUT HINT
+                ================================================== -->
+
+                <div class="input-hint">
+
+                    AI answers are generated from
+                    your selected documents.
+
+                </div>
+
+
+            </main>
+
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =============================================================
+         DELETE DOCUMENT MODAL
+    ============================================================== -->
+
+    <div
+        id="delete-modal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+
+        <div
+            class="modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+        >
+
+
+            <!-- ICON -->
+
+            <div class="modal-icon">
+                🗑
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <h3 id="delete-title">
+                Delete document?
+            </h3>
+
+
+
+            <!-- MESSAGE -->
+
+            <p
+                id="delete-message"
+            >
+                This document will be permanently removed.
+            </p>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="modal-actions">
+
+
+                <button
+                    id="cancel-delete"
+                    class="modal-cancel"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+
+
+                <button
+                    id="confirm-delete"
+                    class="modal-delete"
+                    type="button"
+                >
+                    Delete
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =============================================================
+         JAVASCRIPT
+    ============================================================== -->
+
+    <script
+        src="./script.js?v=4"
+    ></script>
+
+
+</body>
+
+</html>
